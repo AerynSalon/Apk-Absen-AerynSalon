@@ -231,13 +231,11 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault(); 
             
-            // --- KODE BARU UNTUK MEMUTAR AUDIO ---
+            // Kode untuk memutar audio saat tombol diklik
             const audio = document.getElementById('jingleAudio');
-            // Coba putar audio. `.catch` untuk menangani kasus di mana browser memblokir autoplay.
             audio.play().catch(error => {
                 console.error("Audio playback failed:", error);
             });
-            // --- AKHIR KODE BARU ---
 
             submitButton.disabled = true;
             spinner.classList.remove('hidden');
