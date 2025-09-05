@@ -47,7 +47,7 @@
                     <label for="nama" class="block text-sm font-semibold text-slate-700 mb-2">Nama Karyawan</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 007-7z"></path></svg>
                         </div>
                         <select id="nama" name="nama" required class="w-full pl-12 pr-4 py-3.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition duration-200 disabled:bg-slate-100 bg-white">
                             <option value="" disabled selected>Memuat nama karyawan...</option>
@@ -106,6 +106,20 @@
         </div>
     </div>
 
+    <!-- Popup Apresiasi (muncul setelah submit sukses) -->
+    <div id="popupApresiasi" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+      <div class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-[92vw] text-center">
+        <h3 class="text-xl font-extrabold text-purple-700 mb-2">Apresiasi Hari Ini 💜</h3>
+        <p class="text-slate-700 mb-4">
+          Terima kasih atas kerja keras tim Aeryn Salon!<br>
+          Salon hari ini ramai dan penuh semangat ✨
+        </p>
+        <button onclick="tutupPopup()" class="w-full bg-purple-600 text-white font-semibold py-2.5 rounded-lg hover:bg-purple-700 transition">
+          Tutup
+        </button>
+      </div>
+    </div>
+
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBXpVwRhEMJ7dKam9xToNttHiuruabUfEVojiVPe-0N2csGRKfmLjV88SpzBVdYYjV/exec";
 
@@ -134,7 +148,6 @@
             `;
             throw new Error("SCRIPT_URL is not configured. Please edit the HTML file.");
         }
-
 
         function updateClock() {
             const now = new Date();
@@ -220,6 +233,20 @@
             statusMessage.innerHTML = `${icon}<span>${message}</span>`;
         }
 
+        // === Popup Apresiasi ===
+        function tampilkanPopup() {
+            const popup = document.getElementById('popupApresiasi');
+            popup.classList.remove('hidden');
+            popup.classList.add('flex');
+            // Auto close setelah 5 detik
+            setTimeout(()=>{ tutupPopup(); }, 5000);
+        }
+        function tutupPopup() {
+            const popup = document.getElementById('popupApresiasi');
+            popup.classList.add('hidden');
+            popup.classList.remove('flex');
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             getEmployeeNames();
             updateClock();
@@ -231,7 +258,7 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault(); 
             
-            // Kode untuk memutar audio saat tombol diklik
+            // Putar audio saat tombol diklik
             const audio = document.getElementById('jingleAudio');
             audio.play().catch(error => {
                 console.error("Audio playback failed:", error);
@@ -269,6 +296,8 @@
                 });
                 
                 displayStatus('Absensi berhasil dicatat!', 'success');
+                tampilkanPopup(); // <<=== Tampilkan popup setelah sukses
+                
                 form.reset(); 
                 namaSelect.selectedIndex = 0;
                 submitButton.disabled = true;
